@@ -26,13 +26,15 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-
     implementation 'androidx.palette:palette:1.0.0'
 
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+
     implementation files('libs/volley.jar')
     api 'org.apache.httpcomponents:httpclient:4.4.1'
 }
