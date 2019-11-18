@@ -7,7 +7,11 @@ import org.json.JSONException;
 import org.json.JSONTokener;
 
 import java.io.IOException;
-import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -20,9 +24,9 @@ public class RemoteEndpointUtil {
     }
 
     public static JSONArray fetchJsonArray() {
-        String itemsJson = null;
+        String itemsJson;
         try {
-            itemsJson = fetchPlainText(Config.BASE_URL);
+            itemsJson = fetchPlainText();
         } catch (IOException e) {
             Log.e(TAG, "Error fetching items JSON", e);
             return null;
@@ -30,8 +34,8 @@ public class RemoteEndpointUtil {
 
         // Parse JSON
         try {
-            JSONTokener tokener = new JSONTokener(itemsJson);
-            Object val = tokener.nextValue();
+            JSONTokener jsonTokener = new JSONTokener(itemsJson);
+            Object val = jsonTokener.nextValue();
             if (!(val instanceof JSONArray)) {
                 throw new JSONException("Expected JSONArray");
             }
@@ -43,11 +47,23 @@ public class RemoteEndpointUtil {
         return null;
     }
 
-    static String fetchPlainText(URL url) throws IOException {
+    private static String fetchPlainText() throws IOException {
         OkHttpClient client = new OkHttpClient();
 
+        try {
+            TLSSocketFactory socketFactory = new TLSSocketFactory();
+            X509TrustManager trustManager = socketFactory.getTrustManager();
+            if (trustManager != null) {
+                client = new OkHttpClient.Builder()
+                        .sslSocketFactory(socketFactory, trustManager)
+                        .build();
+            }
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+            e.printStackTrace();
+        }
+
         Request request = new Request.Builder()
-                .url(url)
+                .url(Config.BASE_URL)
                 .build();
 
         Response response = client.newCall(request).execute();
