@@ -4,8 +4,25 @@
     <dimen name="detail_body_text_size">22sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
 
-    <dimen name="fab_elevation">2dp</dimen>
     <dimen name="fab_press_translation_z">6dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
+    <dimen name="article_min_height">100dp</dimen>
 
+    <!-- material design elevation
+         1- Nav drawer: 16dp
+         2- App bar: 4dp
+         3- Card: 1dp to 8dp
+         4- FAB: 6dp
+         5- Button: 2dp to 8dp
+         6- Dialog: 24dp
+    -->
+    <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="card_margin">5dp</dimen>
+    <dimen name="article_start_padding">11dp</dimen>
+    <dimen name="article_title_margin_top">8dp</dimen>
+    <dimen name="article_title_margin_bottom">4dp</dimen>
+    <dimen name="recycler_view_padding">4dp</dimen>
+    <dimen name="scrollbarSize">4dp</dimen>
 </resources>

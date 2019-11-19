@@ -18,11 +18,21 @@
 <resources>
 
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
-
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:spotShadowAlpha">0.5</item>
     </style>
 
     <style name="Theme.Bacon.Detail">
         <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="ScrollbarStyle">
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
+        <item name="android:scrollbarThumbVertical">@color/scrollbarColor</item>
+        <item name="android:scrollbarFadeDuration">3000</item>
     </style>
 
 </resources>

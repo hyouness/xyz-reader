@@ -4,4 +4,10 @@
     <dimen name="detail_body_text_size">20sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.3</item>
     <dimen name="fab_margin">24dp</dimen>
+    <dimen name="article_min_height">200dp</dimen>
+    <dimen name="card_margin">7dp</dimen>
+    <dimen name="article_start_padding">13dp</dimen>
+    <dimen name="article_title_margin_top">8dp</dimen>
+    <dimen name="article_title_margin_bottom">4dp</dimen>
+    <dimen name="scrollbarSize">6dp</dimen>
 </resources>

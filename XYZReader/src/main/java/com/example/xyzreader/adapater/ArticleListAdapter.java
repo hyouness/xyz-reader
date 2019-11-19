@@ -1,6 +1,5 @@
 package com.example.xyzreader.adapater;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -32,12 +31,10 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListViewHold
 
     private Cursor mCursor;
     private final OnArticleClickListener clickListener;
-    private final Context context;
 
-    public ArticleListAdapter(Cursor cursor, OnArticleClickListener clickListener, Context context) {
+    public ArticleListAdapter(Cursor cursor, OnArticleClickListener clickListener) {
         mCursor = cursor;
         this.clickListener = clickListener;
-        this.context = context;
         outputFormat = new SimpleDateFormat();
         dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
     }
@@ -71,8 +68,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListViewHold
         mCursor.moveToPosition(position);
         String title = mCursor.getString(ArticleLoader.Query.TITLE);
         String thumbnailUrl = mCursor.getString(ArticleLoader.Query.THUMB_URL);
-        float aspectRatio = mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO);
-        holder.bind(title, getSubtitle(), thumbnailUrl, aspectRatio, context);
+        holder.bind(thumbnailUrl, title, getSubtitle());
     }
 
     @Override
