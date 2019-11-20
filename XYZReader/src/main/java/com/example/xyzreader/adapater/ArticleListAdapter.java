@@ -20,8 +20,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import static com.example.xyzreader.AppConstants.DATE_FORMAT;
+
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListViewHolder> {
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.sss";
 
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat outputFormat;
@@ -84,12 +85,12 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListViewHold
                     publishedDate.getTime(),
                     System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                     DateUtils.FORMAT_ABBREV_ALL).toString()
-                    + "<br/>" + " by "
-                    + mCursor.getString(ArticleLoader.Query.AUTHOR);
+                    + "<br/>" + " by <b>"
+                    + mCursor.getString(ArticleLoader.Query.AUTHOR) + "</b>";
         } else {
             subtitle = outputFormat.format(publishedDate)
-                    + "<br/>" + " by "
-                    + mCursor.getString(ArticleLoader.Query.AUTHOR);
+                    + "<br/>" + " by <b>"
+                    + mCursor.getString(ArticleLoader.Query.AUTHOR) + "</b>";
         }
         return subtitle;
     }
