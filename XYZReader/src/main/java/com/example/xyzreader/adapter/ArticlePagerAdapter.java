@@ -1,7 +1,6 @@
-package com.example.xyzreader.adapater;
+package com.example.xyzreader.adapter;
 
 import android.database.Cursor;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,13 +17,6 @@ public class ArticlePagerAdapter extends FragmentStatePagerAdapter {
     public ArticlePagerAdapter(ArticleDetailActivity articleDetailActivity, FragmentManager fm) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.articleDetailActivity = articleDetailActivity;
-    }
-
-    @Override
-    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        super.setPrimaryItem(container, position, object);
-        ArticleDetailFragment fragment = (ArticleDetailFragment) object;
-        articleDetailActivity.setSelectedItemUpButtonFloor(fragment.getUpButtonFloor());
     }
 
     @NonNull

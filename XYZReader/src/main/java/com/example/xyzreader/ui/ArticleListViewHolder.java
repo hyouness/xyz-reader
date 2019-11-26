@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.xyzreader.R;
-import com.example.xyzreader.adapater.OnArticleClickListener;
+import com.example.xyzreader.adapter.OnArticleClickListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -42,9 +42,6 @@ public class ArticleListViewHolder extends RecyclerView.ViewHolder {
         titleView.setText(title);
         subtitleView.setText(Html.fromHtml(subtitle));
 
-        // Picasso was relied on instead of the outdated volley library
-        // Picasso has the advantage of resizing the imageview based on its aspect ratio when resizing with 0 as height
-        // Also, a number of classes can be refactored out of the codebase i.e. DynamicHeightNetworkImageView and ImageLoaderHelper
         final RequestCreator requestCreator = Picasso.get()
                 .load(thumbnailUrl);
         if (measuredCellWidth == 0) {

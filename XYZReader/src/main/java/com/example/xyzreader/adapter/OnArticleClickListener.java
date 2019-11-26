@@ -1,4 +1,4 @@
-package com.example.xyzreader.adapater;
+package com.example.xyzreader.adapter;
 
 public interface OnArticleClickListener {
     void onArticleClick(int position);

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/article_paragraph"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/detail_inner_horiz_margin"
+    android:paddingRight="@dimen/detail_inner_horiz_margin"
+    android:layout_marginBottom="@dimen/detail_metabar_vert_padding"
+    android:textColor="@color/primaryText"
+    android:textColorLink="@color/colorAccent"
+    style="?android:attr/textAppearanceMedium" />

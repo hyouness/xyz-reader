@@ -1,4 +1,4 @@
-package com.example.xyzreader.adapater;
+package com.example.xyzreader.adapter;
 
 import android.database.Cursor;
 import android.text.format.DateUtils;
@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import static com.example.xyzreader.AppConstants.DATE_FORMAT;
+import static com.example.xyzreader.utils.AppConstants.DATE_FORMAT;
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListViewHolder> {
 

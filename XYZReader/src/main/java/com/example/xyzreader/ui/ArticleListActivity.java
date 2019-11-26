@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,15 +19,20 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.xyzreader.R;
-import com.example.xyzreader.adapater.ArticleListAdapter;
-import com.example.xyzreader.adapater.OnArticleClickListener;
+import com.example.xyzreader.adapter.ArticleListAdapter;
+import com.example.xyzreader.adapter.OnArticleClickListener;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.xyzreader.utils.AppConstants.BROADCAST_ACTION_STATE_CHANGE;
+import static com.example.xyzreader.utils.AppConstants.EXTRA_ERROR;
+import static com.example.xyzreader.utils.AppConstants.EXTRA_REFRESHING;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -35,6 +42,9 @@ import butterknife.ButterKnife;
  */
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener, OnArticleClickListener {
+
+    @BindView(R.id.container_layout)
+    CoordinatorLayout containerLayout;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -48,7 +58,11 @@ public class ArticleListActivity extends AppCompatActivity implements
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    private Snackbar snackBar;
+
     private ArticleListAdapter adapter;
+
+    private boolean mIsRefreshing = false;
 
 
     @Override
@@ -71,7 +85,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         registerReceiver(mRefreshingReceiver,
-                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+                new IntentFilter(BROADCAST_ACTION_STATE_CHANGE));
     }
 
     @Override
@@ -80,20 +94,30 @@ public class ArticleListActivity extends AppCompatActivity implements
         unregisterReceiver(mRefreshingReceiver);
     }
 
-    private boolean mIsRefreshing = false;
-
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+            if (BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                mIsRefreshing = intent.getBooleanExtra(EXTRA_REFRESHING, false);
                 updateRefreshingUI();
+                checkForUpdaterServiceErrors(intent.getStringExtra(EXTRA_ERROR));
             }
         }
     };
 
     private void updateRefreshingUI() {
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+    }
+
+    private void checkForUpdaterServiceErrors(String message) {
+        if (TextUtils.isEmpty(message)) {
+            return;
+        }
+
+        if (snackBar == null) {
+            snackBar = Snackbar.make(containerLayout, message, Snackbar.LENGTH_LONG);
+        }
+        snackBar.show();
     }
 
     @NonNull
@@ -120,8 +144,10 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onArticleClick(int position) {
-        long itemId = adapter.getItemId(position);
-        startActivity(new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(itemId)));
+        if (!mIsRefreshing) {
+            long itemId = adapter.getItemId(position);
+            startActivity(new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(itemId)));
+        }
     }
 
     @Override
