@@ -28,7 +28,6 @@
 
         <activity
             android:name=".ui.ArticleDetailActivity"
-
             android:parentActivityName=".ui.ArticleListActivity">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />

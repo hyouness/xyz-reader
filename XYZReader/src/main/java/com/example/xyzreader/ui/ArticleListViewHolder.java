@@ -6,6 +6,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.xyzreader.R;
@@ -38,7 +39,6 @@ public class ArticleListViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(String thumbnailUrl, String title, String subtitle) {
-
         titleView.setText(title);
         subtitleView.setText(Html.fromHtml(subtitle));
 
@@ -59,10 +59,11 @@ public class ArticleListViewHolder extends RecyclerView.ViewHolder {
                     .resize(measuredCellWidth, 0)
                     .into(thumbnailView);
         }
+        ViewCompat.setTransitionName(thumbnailView, title);
     }
 
     @OnClick
     void onClick(View view) {
-        clickListener.onArticleClick(getAdapterPosition());
+        clickListener.onArticleClick(getAdapterPosition(), thumbnailView);
     }
 }

@@ -13,8 +13,6 @@ abstract class PagingScrollListener implements NestedScrollView.OnScrollChangeLi
         View lastChild = v.getChildAt(lastChildIndex);
         if (lastChild != null) {
             if ((scrollY >= (lastChild.getMeasuredHeight() - v.getMeasuredHeight())) && scrollY > oldScrollY) {
-                System.out.println(String.format("scrollY: %s - lastChild MeasureHeight: %s - NestedScrollView MeasuredHeight: %s",
-                        scrollY, lastChild.getMeasuredHeight(), v.getMeasuredHeight()));
                 loadMoreItems();
             }
         }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -225,47 +227,65 @@ public class ArticleDetailFragment extends Fragment {
             bylineView.setText(Html.fromHtml(article.getByline()));
             bylineView.setMovementMethod(new LinkMovementMethod());
 
-            Picasso.get().load(article.getPhotoUrl()).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    if (bitmap != null) {
-                        Palette p = Palette.from(bitmap).maximumColorCount(12).generate();
-                        mMutedColor = p.getDarkMutedColor(DEFAULT_MUTED_COLOR);
-                        mPhotoView.setImageBitmap(bitmap);
-                        metaBarLL.setBackgroundColor(mMutedColor);
-                    }
-                }
+            bindPhotoView();
 
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {}
-            });
-
-            if (bodyViewRV.getAdapter() == null) {
-                bodyAdapter = new ArticleBodyAdapter(rosarioReg);
-                bodyViewRV.setAdapter(bodyAdapter);
-                bodyViewRV.setHasFixedSize(true);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-                bodyViewRV.setLayoutManager(layoutManager);
-                mScrollView.setOnScrollChangeListener(new PagingScrollListener() {
-                    @Override
-                    void loadMoreItems() {
-                        System.out.printf("isLoading: %s - Id: %s - Selected Id: %s - Queried Id: %n", isLoading, mItemId, getSelectedItemId());
-                        if (!isLoading && getSelectedItemId() == mItemId) {
-                            incrementPage();
-                            loadArticleParagraphs();
-                            System.out.printf("Page #%s of Article %s%n", page, article.getTitle());
-                        }
-                    }
-                });
-            }
+            bindArticleBodyRV();
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
             bylineView.setText("N/A" );
         }
+    }
+
+    private void bindArticleBodyRV() {
+        bodyAdapter = new ArticleBodyAdapter(rosarioReg);
+        bodyViewRV.setAdapter(bodyAdapter);
+        bodyViewRV.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        bodyViewRV.setLayoutManager(layoutManager);
+        mScrollView.setOnScrollChangeListener(new PagingScrollListener() {
+            @Override
+            void loadMoreItems() {
+                if (!isLoading && getSelectedItemId() == mItemId) {
+                    incrementPage();
+                    loadArticleParagraphs();
+                }
+            }
+        });
+    }
+
+    private void bindPhotoView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhotoView.setTransitionName(article.getTitle());
+            mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    if (mPhotoView != null) {
+                        mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        getActivity().startPostponedEnterTransition();
+                        mPhotoView.setTransitionName(null);
+                    }
+                    return true;
+                }
+            });
+        }
+        Picasso.get().load(article.getPhotoUrl()).noFade().into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                if (bitmap != null) {
+                    Palette p = Palette.from(bitmap).maximumColorCount(12).generate();
+                    mMutedColor = p.getDarkMutedColor(DEFAULT_MUTED_COLOR);
+                    mPhotoView.setImageBitmap(bitmap);
+                    metaBarLL.setBackgroundColor(mMutedColor);
+                }
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {}
+        });
     }
 
     void hideProgress() {
@@ -317,7 +337,6 @@ public class ArticleDetailFragment extends Fragment {
         }
         // If date is before 1902, just show the string
         return outputFormat.format(publishedDate) + " by <font color='#ffffff'>" + author + "</font>";
-
     }
 
     private Article getArticleById() {

@@ -10,5 +10,6 @@
     <string name="up">Up</string>
     <string name="article_image_description">Article Image</string>
     <string name="article_photo">Article Photo</string>
+    <string name="transition_photo">shared article image</string>
 
 </resources>
